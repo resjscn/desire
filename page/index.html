@@ -148,24 +148,20 @@
 
     <!-- 发送愿望 -->
     <script>
-        function QueryString(fieldName) {
-            var urlString = document.location.search;
-            if (urlString != null) {
-                var typeQu = fieldName + "=";
-                var urlEnd = urlString.indexOf(typeQu);
-                if (urlEnd != -1) {
-                    var paramsUrl = urlString.substring(urlEnd + typeQu.length);
-                    var isEnd = paramsUrl.indexOf('&');
-                    if (isEnd != -1) {
-                        return paramsUrl.substring(0, isEnd);
-                    }
-                    else {
-                        return paramsUrl;
-                    }
-                } else { return null; }
-            } else { return null; }
-        }
-        const key = QueryString('key')
+        function getUrlParams(urlStr) {
+            // 获取url中"?"符后的字串
+            let url = urlStr || location.href;
+            let params = {};
+            if (url.indexOf('?') != -1) {
+                let str = url.substr(url.indexOf('?') + 1);
+                let strs = str.split('&');
+                for (let i = 0; i < strs.length; i++) {
+                    params[strs[i].split('=')[0]] = decodeURI(strs[i].split('=')[1]);
+                }
+            }
+            return params;
+        };
+        const key = getUrlParams()['key']
         const btn = document.getElementById('btn')
         const url = '127.0.0.1:9666'
         // 获取token保存到vuex中的用户信息，此处仅适用于本项目，注意删除或修改

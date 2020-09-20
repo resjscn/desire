@@ -3,7 +3,7 @@ const socketPort = 9666
 console.log("开始建立socket连接...")
 function sendEmail(desire, key) {
     const { SMTPClient } = require('emailjs');
-    const emailStr = `${key||''}发起了一个愿望：${desire}，希望你帮他实现。`;
+    const emailStr = `${key}发起了一个愿望：${desire}，希望你帮他实现。`;
     let server = new SMTPClient({
         user: "name@163.com", //用户名
         password: "pwd", //授权码不是登陆密码
@@ -24,7 +24,7 @@ const server = ws.createServer(function (conn) {
     conn.on('text', function (result) {
         const key = conn.path.replace('/', '')
         console.log(result, key)
-        sendEmail(result, key)
+        sendEmail(result, key || '')
     })
     conn.on("close", function (code, reason) {
         console.log("关闭连接")
