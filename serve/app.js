@@ -22,9 +22,9 @@ function sendEmail(desire, key) {
 
 const server = ws.createServer(function (conn) {
     conn.on('text', function (result) {
-        const key = conn.path.replace('/', '')
+        const key = decodeURI(conn.path.replace('/', ''))
         console.log(result, key)
-        sendEmail(result, key || '')
+        sendEmail(result, key == 'undefined' ? '' : key)
     })
     conn.on("close", function (code, reason) {
         console.log("关闭连接")
