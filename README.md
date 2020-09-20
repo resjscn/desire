@@ -1,5 +1,5 @@
+预览地址：[打开网页](http://resjs.cn/desire/index.html)
 1. 需要你有一个服务器。
 2. 需要一个邮箱并开通SMTP功能。
 3. 别忘了检查你的端口是否被占用或者被墙，阿里云记得配置安全组。\
 4. 如果需要记录访问源（发送愿望的人），在url上加上?key=name
-预览地址：[打开网页](http://resjs.cn/desire/index.html)
