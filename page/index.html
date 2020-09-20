@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" /><!-- 删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" /><!-- 设置苹果工具栏颜色 -->
+    <meta name="format-detection" content="telephone=no, email=no" />
+    <!--忽略页面中的数字识别为电话，忽略email识别 -->
+    <!-- 启用360浏览器的极速模式(webkit) -->
+    <meta name="renderer" content="webkit">
+    <!-- 避免IE使用兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+    <meta name="HandheldFriendly" content="true">
+    <!-- 微软的老式浏览器 -->
+    <meta name="MobileOptimized" content="320">
+    <!-- windows phone 点击无高光 -->
+    <meta name="msapplication-tap-highlight" content="no">
+    <title>今天又是充满希望的一天</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: url(./img/bg.jpg) no-repeat fixed top;
+        }
+
+        .box {
+            width: 300px;
+            margin: 200px auto;
+        }
+
+        .box .tit {
+            color: #fff;
+            letter-spacing: 3px;
+            font-size: 16px;
+        }
+
+        .box .from,
+        .box .tit {
+            text-align: center;
+            width: 100%;
+        }
+
+        .box .from textarea {
+            width: 100%;
+            margin: 20px 0;
+            line-height: 22px;
+            padding: 5px;
+            font-size: 16px;
+            outline: none;
+            border: #fff 1px solid;
+            border-radius: 8px;
+            background: transparent;
+            color: #fff;
+        }
+
+        .box .from button {
+            padding: 8px 25px;
+            border: none;
+            border-radius: 8px;
+            background-color: #4166F5;
+            color: #fff;
+        }
+
+        .box .from button:focus {
+            outline: none;
+        }
+    </style>
+
+    <style>
+        #stars {
+            margin: 0 auto;
+            max-width: 1600px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+
+        .star {
+            display: block;
+            width: 1px;
+            background: transparent;
+            position: relative;
+            opacity: 0;
+            /*过渡动画*/
+            animation: star-fall 3s linear infinite;
+            -webkit-animation: star-fall 3s linear infinite;
+            -moz-animation: star-fall 3s linear infinite;
+        }
+
+        .star:after {
+            content: '';
+            display: block;
+            border: 0px solid #fff;
+            border-width: 0px 90px 2px 90px;
+            border-color: transparent transparent transparent rgba(255, 255, 255, .5);
+            box-shadow: 0 0 1px 0 rgba(255, 255, 255, .1);
+            /*变形*/
+            transform: rotate(-45deg) translate3d(1px, 3px, 0);
+            -webkit-transform: rotate(-45deg) translate3d(1px, 3px, 0);
+            -moz-transform: rotate(-45deg) translate3d(1px, 3px, 0);
+            transform-origin: 0% 100%;
+            -webkit-transform-origin: 0% 100%;
+            -moz-transform-origin: 0% 100%;
+        }
+
+        @keyframes star-fall {
+            0% {
+                opacity: 0;
+                transform: scale(0.5) translate3d(0, 0, 0);
+                -webkit-transform: scale(0.5) translate3d(0, 0, 0);
+                -moz-transform: scale(0.5) translate3d(0, 0, 0);
+            }
+
+            50% {
+                opacity: 1;
+                transform: translate3d(-200px, 200px, 0);
+                -webkit-transform: translate3d(-200px, 200px, 0);
+                -moz-transform: translate3d(-200px, 200px, 0);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1.2) translate3d(-300px, 300px, 0);
+                -webkit-transform: scale(1.2) translate3d(-300px, 300px, 0);
+                -moz-transform: scale(1.2) translate3d(-300px, 300px, 0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="tit">今天，又是充满希望的一天。</div>
+        <div class="from">
+            <textarea name="desire" id="desire" cols="30" rows="5" placeholder="输入你的愿望"></textarea>
+            <button id="btn">发送愿望</button>
+        </div>
+    </div>
+
+    <!-- 发送愿望 -->
+    <script>
+        function QueryString(fieldName) {
+            var urlString = document.location.search;
+            if (urlString != null) {
+                var typeQu = fieldName + "=";
+                var urlEnd = urlString.indexOf(typeQu);
+                if (urlEnd != -1) {
+                    var paramsUrl = urlString.substring(urlEnd + typeQu.length);
+                    var isEnd = paramsUrl.indexOf('&');
+                    if (isEnd != -1) {
+                        return paramsUrl.substring(0, isEnd);
+                    }
+                    else {
+                        return paramsUrl;
+                    }
+                } else { return null; }
+            } else { return null; }
+        }
+        const key = QueryString('key')
+        const btn = document.getElementById('btn')
+        const url = '127.0.0.1:9666'
+        // 获取token保存到vuex中的用户信息，此处仅适用于本项目，注意删除或修改
+        const socketUrl = `ws://${url}/${key}`;
+        const socket = new WebSocket(socketUrl);
+        // 监听socket打开
+        socket.onopen = function () {
+            console.log("消息推送服务已打开。");
+        }
+        // 监听socket错误
+        socket.onerror = function () {
+            console.log("服务器错误，无法接收实时信息推送");
+        };
+        // 监听socket关闭
+        socket.onclose = function () {
+            console.log("消息推送服务被断开！");
+        };
+        btn.onclick = function () {
+            let desireValue = document.getElementById('desire').value
+            socket.send(desireValue);
+            alert('你的愿望已发送，祝你好运！')
+        }
+    </script>
+
+    <!-- 流星雨 -->
+    <div id="stars">
+        <div class="star" style="top: 0px;left: 500px;"></div>
+    </div>
+    <script>
+        var stars = document.getElementById('stars')
+
+        // js随机生成流星
+        for (var j = 0; j < 30; j++) {
+            var newStar = document.createElement("div")
+            newStar.className = "star"
+            newStar.style.top = randomDistance(500, -100) + 'px'
+            newStar.style.left = randomDistance(1300, 300) + 'px'
+            stars.appendChild(newStar)
+        }
+
+        // 封装随机数方法
+        function randomDistance(max, min) {
+            var distance = Math.floor(Math.random() * (max - min + 1) + min)
+            return distance
+        } var star = document.getElementsByClassName('star')
+
+        // 给流星添加动画延时
+        for (var i = 0, len = star.length; i < len; i++) {
+            star[i].style.animationDelay = i % 6 == 0 ? '0s' : i * 0.8 + 's'
+        }
+    </script>
+</body>
+
+</html>

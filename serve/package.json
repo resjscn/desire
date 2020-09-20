@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "emailjs": "^3.3.0",
+    "nodejs-websocket": "^1.7.2"
+  }
+}
